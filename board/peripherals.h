@@ -12,6 +12,7 @@
 #include "fsl_common.h"
 #include "fsl_rtc.h"
 #include "fsl_i2c.h"
+#include "fsl_pint.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -32,6 +33,21 @@ extern "C" {
 #define FLEXCOMM1_PERIPHERAL ((I2C_Type *)FLEXCOMM1)
 /* Definition of the clock source frequency */
 #define FLEXCOMM1_CLOCK_SOURCE 12000000UL
+/* BOARD_InitPeripherals_cm33_core0 defines for PINT */
+/* Definition of peripheral ID */
+#define PINT_PERIPHERAL ((PINT_Type *) PINT_BASE)
+/* PINT interrupt vector ID (number). */
+#define PINT_PINT_0_IRQN PIN_INT0_IRQn
+/* PINT interrupt vector priority. */
+#define PINT_PINT_0_IRQ_PRIORITY 0
+/* PINT interrupt vector ID (number). */
+#define PINT_PINT_1_IRQN PIN_INT1_IRQn
+/* PINT interrupt vector priority. */
+#define PINT_PINT_1_IRQ_PRIORITY 0
+/* Definition of PINT interrupt ID for interrupt 0  */
+#define PINT_INT_0 kPINT_PinInt0
+/* Definition of PINT interrupt ID for interrupt 1  */
+#define PINT_INT_1 kPINT_PinInt1
 
 /***********************************************************************************************************************
  * Global variables
@@ -41,6 +57,14 @@ extern rtc_datetime_t RTC_dateTimeStruct;
 /* Alarm date and time structure */
 extern rtc_datetime_t RTC_alarmDateTimeStruct;
 extern const i2c_master_config_t FLEXCOMM1_config;
+
+/***********************************************************************************************************************
+ * Callback functions
+ **********************************************************************************************************************/
+/* INT_0 callback function for the PINT component */
+extern void INTA_Callback(pint_pin_int_t pintr, uint32_t pmatch_status);
+/* INT_1 callback function for the PINT component */
+extern void INTS_Callback(pint_pin_int_t pintr, uint32_t pmatch_status);
 
 /***********************************************************************************************************************
  * Initialization functions

@@ -73,6 +73,8 @@ instance:
   - nvic:
     - interrupt_table:
       - 0: []
+      - 1: []
+      - 2: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -198,6 +200,62 @@ static void FLEXCOMM1_init(void) {
 }
 
 /***********************************************************************************************************************
+ * PINT initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'PINT'
+- type: 'pint'
+- mode: 'interrupt_mode'
+- custom_name_enabled: 'false'
+- type_id: 'pint_cf4a806bb2a6c1ffced58ae2ed7b43af'
+- functional_group: 'BOARD_InitPeripherals_cm33_core0'
+- peripheral: 'PINT'
+- config_sets:
+  - general:
+    - interrupt_array:
+      - 0:
+        - interrupt_id: 'INT_0'
+        - interrupt_selection: 'PINT.0'
+        - interrupt_type: 'kPINT_PinIntEnableFallEdge'
+        - callback_function: 'INTA_Callback'
+        - enable_callback: 'true'
+        - interrupt:
+          - IRQn: 'PIN_INT0_IRQn'
+          - enable_priority: 'true'
+          - priority: '0'
+      - 1:
+        - interrupt_id: 'INT_1'
+        - interrupt_selection: 'PINT.1'
+        - interrupt_type: 'kPINT_PinIntEnableFallEdge'
+        - callback_function: 'INTS_Callback'
+        - enable_callback: 'true'
+        - interrupt:
+          - IRQn: 'PIN_INT1_IRQn'
+          - enable_priority: 'true'
+          - priority: '0'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+static void PINT_init(void) {
+  /* PINT initiation  */
+  PINT_Init(PINT_PERIPHERAL);
+  /* Interrupt vector PIN_INT0_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(PINT_PINT_0_IRQN, PINT_PINT_0_IRQ_PRIORITY);
+  /* Interrupt vector PIN_INT1_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(PINT_PINT_1_IRQN, PINT_PINT_1_IRQ_PRIORITY);
+  /* PINT PINT.0 configuration */
+  PINT_PinInterruptConfig(PINT_PERIPHERAL, PINT_INT_0, kPINT_PinIntEnableFallEdge, INTA_Callback);
+  /* PINT PINT.1 configuration */
+  PINT_PinInterruptConfig(PINT_PERIPHERAL, PINT_INT_1, kPINT_PinIntEnableFallEdge, INTS_Callback);
+  /* Enable PINT PINT.0 callback */
+  PINT_EnableCallbackByIndex(PINT_PERIPHERAL, kPINT_PinInt0);
+  /* Enable PINT PINT.1 callback */
+  PINT_EnableCallbackByIndex(PINT_PERIPHERAL, kPINT_PinInt1);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals_cm33_core0(void)
@@ -205,6 +263,7 @@ void BOARD_InitPeripherals_cm33_core0(void)
   /* Initialize components */
   RTC_init();
   FLEXCOMM1_init();
+  PINT_init();
 }
 
 /***********************************************************************************************************************

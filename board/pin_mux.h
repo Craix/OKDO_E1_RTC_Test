@@ -240,7 +240,7 @@ void BOARD_InitLEDsPins(void); /* Function assigned for the Cortex-M33 (Core #0)
 #define BOARD_INITBUTTONSPINS_S2_PIN_MASK (1U << 18U)      /*!<@brief PORT pin mask */
                                                            /* @} */
 
-/*! @name PIO1_9 (number 10), S3/P18[1]/PIO1_9_GPIO_ARD
+/*! @name PIO1_9 (number 10), ENC
   @{ */
 
 /* Symbols to be used with GPIO driver */
@@ -421,6 +421,74 @@ void BOARD_InitACCELPins(void); /* Function assigned for the Cortex-M33 (Core #0
  *
  */
 void OLED(void); /* Function assigned for the Cortex-M33 (Core #0) */
+
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_10_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_10_FUNC_ALT0 0x00u
+/*!
+ * @brief Selects function mode (on-chip pull-up/pull-down resistor control).: Pull-up. Pull-up resistor enabled. */
+#define PIO1_10_MODE_PULL_UP 0x02u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_8_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_8_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_9_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_9_FUNC_ALT0 0x00u
+
+/*! @name PIO1_8 (number 24), ENC
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define ENCODER_A_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define ENCODER_A_GPIO_PIN_MASK (1U << 8U) /*!<@brief GPIO pin mask */
+#define ENCODER_A_PORT 1U                  /*!<@brief PORT peripheral base pointer */
+#define ENCODER_A_PIN 8U                   /*!<@brief PORT pin number */
+#define ENCODER_A_PIN_MASK (1U << 8U)      /*!<@brief PORT pin mask */
+                                           /* @} */
+
+/*! @name PIO1_9 (number 10), ENC
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define ENCODER_B_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define ENCODER_B_GPIO_PIN_MASK (1U << 9U) /*!<@brief GPIO pin mask */
+#define ENCODER_B_PORT 1U                  /*!<@brief PORT peripheral base pointer */
+#define ENCODER_B_PIN 9U                   /*!<@brief PORT pin number */
+#define ENCODER_B_PIN_MASK (1U << 9U)      /*!<@brief PORT pin mask */
+                                           /* @} */
+
+/*! @name PIO1_10 (number 40), ENC
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define ENCODER_S_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define ENCODER_S_GPIO_PIN_MASK (1U << 10U) /*!<@brief GPIO pin mask */
+#define ENCODER_S_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define ENCODER_S_PIN 10U                   /*!<@brief PORT pin number */
+#define ENCODER_S_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
+                                            /* @} */
+
+/*! @name PIO1_8 (number 24), ENC
+  @{ */
+#define ENCODER_INTA_PORT 1U                  /*!<@brief PORT peripheral base pointer */
+#define ENCODER_INTA_PIN 8U                   /*!<@brief PORT pin number */
+#define ENCODER_INTA_PIN_MASK (1U << 8U)      /*!<@brief PORT pin mask */
+                                              /* @} */
+
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void Encoder(void); /* Function assigned for the Cortex-M33 (Core #0) */
 
 #if defined(__cplusplus)
 }

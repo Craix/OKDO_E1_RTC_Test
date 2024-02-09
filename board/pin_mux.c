@@ -16,6 +16,9 @@ board: LPCXpresso55S69
 pin_labels:
 - {pin_num: '71', pin_signal: PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13, label: OLED, identifier: OLED;SDA}
 - {pin_num: '72', pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14, label: OLED, identifier: OLED;SCl;SCL}
+- {pin_num: '24', pin_signal: PIO1_8/FC0_CTS_SDA_SSEL0/SD0_CLK/SCT0_OUT1/FC4_SSEL2/ADC0_4, label: ENC, identifier: ENC;A;INTA}
+- {pin_num: '10', pin_signal: PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12, label: ENC, identifier: S3;ENC;B;INTB}
+- {pin_num: '40', pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3, label: ENC, identifier: C;S}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -23,6 +26,7 @@ pin_labels:
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 #include "fsl_iocon.h"
+#include "fsl_inputmux.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -35,6 +39,7 @@ void BOARD_InitBootPins(void)
 {
     BOARD_InitDEBUG_UARTPins();
     OLED();
+    Encoder();
 }
 
 /* clang-format off */
@@ -439,8 +444,8 @@ BOARD_InitBUTTONsPins:
     mode: pullUp, slew_rate: standard, invert: disabled, open_drain: disabled}
   - {pin_num: '64', peripheral: GPIO, signal: 'PIO1, 18', pin_signal: PIO1_18/SD1_POW_EN/SCT0_OUT5/PLU_OUT0, direction: INPUT, mode: pullUp, slew_rate: standard,
     invert: disabled, open_drain: disabled}
-  - {pin_num: '10', peripheral: GPIO, signal: 'PIO1, 9', pin_signal: PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12, direction: INPUT, mode: pullUp, slew_rate: standard,
-    invert: disabled, open_drain: disabled, asw: enabled}
+  - {pin_num: '10', peripheral: GPIO, signal: 'PIO1, 9', pin_signal: PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12, identifier: S3, direction: INPUT,
+    mode: pullUp, slew_rate: standard, invert: disabled, open_drain: disabled, asw: enabled}
   - {pin_num: '32', peripheral: SYSCON, signal: RESET, pin_signal: RESETN}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
@@ -878,6 +883,126 @@ void OLED(void)
                          /* Switch between GPIO mode and I2C mode.
                           * : I2C mode. */
                          | IOCON_PIO_EGP(PIO0_14_EGP_I2C_MODE));
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+Encoder:
+- options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '24', peripheral: GPIO, signal: 'PIO1, 8', pin_signal: PIO1_8/FC0_CTS_SDA_SSEL0/SD0_CLK/SCT0_OUT1/FC4_SSEL2/ADC0_4, identifier: A, direction: INPUT}
+  - {pin_num: '10', peripheral: GPIO, signal: 'PIO1, 9', pin_signal: PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12, identifier: B, direction: INPUT}
+  - {pin_num: '40', peripheral: GPIO, signal: 'PIO1, 10', pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3, identifier: S, direction: INPUT, mode: pullUp}
+  - {pin_num: '24', peripheral: PINT, signal: 'PINT, 0', pin_signal: PIO1_8/FC0_CTS_SDA_SSEL0/SD0_CLK/SCT0_OUT1/FC4_SSEL2/ADC0_4, identifier: INTA}
+  - {pin_num: '40', peripheral: PINT, signal: 'PINT, 1', pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : Encoder
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 (Core #0) */
+void Encoder(void)
+{
+    /* Enables the clock for the Input Mux.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_InputMux);
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    /* Enables the clock for the GPIO1 module */
+    CLOCK_EnableClock(kCLOCK_Gpio1);
+
+    gpio_pin_config_t A_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PIO1_8 (pin 24)  */
+    GPIO_PinInit(ENCODER_A_GPIO, ENCODER_A_PORT, ENCODER_A_PIN, &A_config);
+
+    gpio_pin_config_t B_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PIO1_9 (pin 10)  */
+    GPIO_PinInit(ENCODER_B_GPIO, ENCODER_B_PORT, ENCODER_B_PIN, &B_config);
+
+    gpio_pin_config_t S_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PIO1_10 (pin 40)  */
+    GPIO_PinInit(ENCODER_S_GPIO, ENCODER_S_PORT, ENCODER_S_PIN, &S_config);
+    /* PIO1_8 is selected for PINT input 0 */
+    INPUTMUX_AttachSignal(INPUTMUX, 0U, kINPUTMUX_GpioPort1Pin8ToPintsel);
+    /* PIO1_10 is selected for PINT input 1 */
+    INPUTMUX_AttachSignal(INPUTMUX, 1U, kINPUTMUX_GpioPort1Pin10ToPintsel);
+
+    IOCON->PIO[1][10] = ((IOCON->PIO[1][10] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_MODE_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT110 (pin 40) is configured as PIO1_10. */
+                         | IOCON_PIO_FUNC(PIO1_10_FUNC_ALT0)
+
+                         /* Selects function mode (on-chip pull-up/pull-down resistor control).
+                          * : Pull-up.
+                          * Pull-up resistor enabled. */
+                         | IOCON_PIO_MODE(PIO1_10_MODE_PULL_UP)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_10_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][8] = ((IOCON->PIO[1][8] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT18 (pin 24) is configured as PIO1_8. */
+                        | IOCON_PIO_FUNC(PIO1_8_FUNC_ALT0)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_8_DIGIMODE_DIGITAL));
+
+    if (Chip_GetVersion()==1)
+    {
+        IOCON->PIO[1][9] = ((IOCON->PIO[1][9] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT19 (pin 10) is configured as PIO1_9. */
+                        | IOCON_PIO_FUNC(PIO1_9_FUNC_ALT0)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_9_DIGIMODE_DIGITAL));
+    }
+    else
+    {
+        IOCON->PIO[1][9] = ((IOCON->PIO[1][9] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT19 (pin 10) is configured as PIO1_9. */
+                        | IOCON_PIO_FUNC(PIO1_9_FUNC_ALT0)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_9_DIGIMODE_DIGITAL));
+    }
 }
 /***********************************************************************************************************************
  * EOF
