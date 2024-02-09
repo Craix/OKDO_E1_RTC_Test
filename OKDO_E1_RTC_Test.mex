@@ -924,7 +924,9 @@
                <instances>
                   <instance name="NVIC" uuid="5a054c6f-785c-4cdf-af62-8382d62cb8bf" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
@@ -934,13 +936,21 @@
                            <setting name="setDateTime" value="true"/>
                            <struct name="rtc_datetime">
                               <setting name="year" value="2024"/>
-                              <setting name="month" value="2"/>
-                              <setting name="day" value="9"/>
-                              <setting name="hour" value="17"/>
-                              <setting name="minute" value="6"/>
+                              <setting name="month" value="1"/>
+                              <setting name="day" value="1"/>
+                              <setting name="hour" value="0"/>
+                              <setting name="minute" value="0"/>
                               <setting name="second" value="0"/>
                            </struct>
-                           <setting name="setAlarmTime" value="false"/>
+                           <setting name="setAlarmTime" value="true"/>
+                           <struct name="alarm_datetime">
+                              <setting name="year" value="2024"/>
+                              <setting name="month" value="1"/>
+                              <setting name="day" value="1"/>
+                              <setting name="hour" value="0"/>
+                              <setting name="minute" value="0"/>
+                              <setting name="second" value="20"/>
+                           </struct>
                            <setting name="setWakeup" value="false"/>
                            <setting name="alarm_wake_up_enable" value="false"/>
                            <setting name="wake_up_enable" value="false"/>
@@ -948,7 +958,7 @@
                         </struct>
                         <struct name="rtc_interrupt">
                            <struct name="interrupt_vectors">
-                              <setting name="enable_irq" value="false"/>
+                              <setting name="enable_irq" value="true"/>
                               <struct name="interrupt">
                                  <setting name="IRQn" value="RTC_IRQn"/>
                                  <setting name="enable_interrrupt" value="enabled"/>
@@ -982,7 +992,9 @@
                <instances>
                   <instance name="NVIC_2" uuid="8cd322de-27d2-4513-9335-e4cd6b06a99a" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
-                        <array name="interrupt_table"/>
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
                         <array name="interrupts"/>
                      </config_set>
                   </instance>

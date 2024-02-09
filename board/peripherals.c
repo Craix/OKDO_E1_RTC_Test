@@ -71,7 +71,8 @@ instance:
 - peripheral: 'NVIC'
 - config_sets:
   - nvic:
-    - interrupt_table: []
+    - interrupt_table:
+      - 0: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -99,19 +100,26 @@ instance:
       - setDateTime: 'true'
       - rtc_datetime:
         - year: '2024'
-        - month: '2'
-        - day: '9'
-        - hour: '17'
-        - minute: '6'
+        - month: '1'
+        - day: '1'
+        - hour: '0'
+        - minute: '0'
         - second: '0'
-      - setAlarmTime: 'false'
+      - setAlarmTime: 'true'
+      - alarm_datetime:
+        - year: '2024'
+        - month: '1'
+        - day: '1'
+        - hour: '0'
+        - minute: '0'
+        - second: '20'
       - setWakeup: 'false'
       - alarm_wake_up_enable: 'false'
       - wake_up_enable: 'false'
       - start: 'true'
     - rtc_interrupt:
       - interrupt_vectors:
-        - enable_irq: 'false'
+        - enable_irq: 'true'
         - interrupt:
           - IRQn: 'RTC_IRQn'
           - enable_interrrupt: 'enabled'
@@ -122,11 +130,19 @@ instance:
 /* clang-format on */
 rtc_datetime_t RTC_dateTimeStruct = {
   .year = 2024U,
-  .month = 2U,
-  .day = 9U,
-  .hour = 17U,
-  .minute = 6U,
+  .month = 1U,
+  .day = 1U,
+  .hour = 0U,
+  .minute = 0U,
   .second = 0U
+};
+rtc_datetime_t RTC_alarmDateTimeStruct = {
+  .year = 2024U,
+  .month = 1U,
+  .day = 1U,
+  .hour = 0U,
+  .minute = 0U,
+  .second = 20U
 };
 
 static void RTC_init(void) {
@@ -136,8 +152,12 @@ static void RTC_init(void) {
   RTC_StopTimer(RTC_PERIPHERAL);
   /* Date and time initialization */
   RTC_SetDatetime(RTC_PERIPHERAL, &RTC_dateTimeStruct);
+  /* Alarm initialization */
+  RTC_SetAlarm(RTC_PERIPHERAL, &RTC_alarmDateTimeStruct);
   /* Start RTC timer */
   RTC_StartTimer(RTC_PERIPHERAL);
+  /* Enable interrupt RTC_IRQn request in the NVIC. */
+  EnableIRQ(RTC_IRQN);
 }
 
 /***********************************************************************************************************************

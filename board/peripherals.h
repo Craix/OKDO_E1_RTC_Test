@@ -23,6 +23,10 @@ extern "C" {
 /* Definitions for BOARD_InitPeripherals_cm33_core0 functional group */
 /* Definition of peripheral ID */
 #define RTC_PERIPHERAL RTC
+/* RTC interrupt vector ID (number). */
+#define RTC_IRQN RTC_IRQn
+/* RTC interrupt handler identifier. */
+#define RTC_IRQHANDLER RTC_IRQHandler
 /* BOARD_InitPeripherals_cm33_core0 defines for FLEXCOMM1 */
 /* Definition of peripheral ID */
 #define FLEXCOMM1_PERIPHERAL ((I2C_Type *)FLEXCOMM1)
@@ -34,6 +38,8 @@ extern "C" {
  **********************************************************************************************************************/
 /* Date and time structure */
 extern rtc_datetime_t RTC_dateTimeStruct;
+/* Alarm date and time structure */
+extern rtc_datetime_t RTC_alarmDateTimeStruct;
 extern const i2c_master_config_t FLEXCOMM1_config;
 
 /***********************************************************************************************************************
