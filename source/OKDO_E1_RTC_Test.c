@@ -12,9 +12,9 @@
 #define I2C_OLED ((I2C_Type *)I2C1_BASE)
 #define MENU_POS 7
 
-volatile bool alarm=false;
+volatile bool alarm = false;
 char sbuff[32];
-volatile uint8_t Mode=MENU_POS;
+volatile uint8_t Mode = MENU_POS;
 
 uint8_t Set=0;
 
@@ -95,6 +95,7 @@ void Digital_Clock(uint8_t x, uint8_t y, rtc_datetime_t *datetime, uint8_t mode)
 		OLED_Puts(x+1, y+7, (char*)Msg[Set]);
 }
 
+//analog alarm
 void RTC_IRQHANDLER()
 {
 	if (RTC_GetStatusFlags(RTC) & kRTC_AlarmFlag)
@@ -105,8 +106,7 @@ void RTC_IRQHANDLER()
 	}
 }
 
-/* INT_0 callback function for the PINT component */
-extern void INTA_Callback(pint_pin_int_t pintr, uint32_t pmatch_status)
+void INTA_Callback(pint_pin_int_t pintr, uint32_t pmatch_status)
 {
 	if(Mode<MENU_POS)
 	{
@@ -133,17 +133,13 @@ extern void INTA_Callback(pint_pin_int_t pintr, uint32_t pmatch_status)
 	}
 }
 
-/* INT_1 callback function for the PINT component */
-extern void INTS_Callback(pint_pin_int_t pintr, uint32_t pmatch_status)
+void INTS_Callback(pint_pin_int_t pintr, uint32_t pmatch_status)
 {
 	Mode++;
-	if(Mode>MENU_POS)
-	Mode=0;
-}
 
-/*
- * @brief Application entry point.
- */
+	if(Mode>MENU_POS)
+		Mode=0;
+}
 
 int main(void)
 {
@@ -163,7 +159,7 @@ int main(void)
 
 	while(1)
 	{
-		if(Mode==MENU_POS)
+		if(Mode == MENU_POS)
 		{
 			if(Set)
 			{
